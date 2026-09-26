@@ -10,7 +10,7 @@
 | Thành viên | MSSV | GitHub | Phạm vi | Trạng thái bằng chứng |
 |---|---|---|---|---|
 | Nguyễn Văn Duy | `2A202602729` | `Clownnvd` | Tích hợp ingestion, cleaning, quality gate, benchmark, corruption/repair, báo cáo và test end-to-end | Đã chạy và kiểm tra trên máy Duy; báo cáo cá nhân nằm trong `report/2A202602729_NguyenVanDuy.md` |
-| Dương Thị Ngân | `2A2026022808` | `nganduong-123` | Kiểm tra độc lập quality gate trên baseline/corrupted/repaired; bổ sung test và ghi nhận phát hiện | Đã chạy handoff, bổ sung test cá nhân và báo cáo tại `report/2A2026022808_DuongThiNgan.md` trên nhánh `ngan/quality-check` |
+| Dương Thị Ngân | `2A2026022808` | `nganduong-123` | Kiểm tra độc lập quality gate trên baseline/corrupted/repaired; bổ sung test và ghi nhận phát hiện | Đã chạy handoff, bổ sung test cá nhân và báo cáo tại `report/2A2026022808_DuongThiNgan.md`; PR #1 đã merge |
 
 ## Phân công theo checkpoint
 
@@ -28,10 +28,10 @@
 
 | Thành viên | Tỷ lệ đã có bằng chứng commit | Ghi chú |
 |---|---:|---|
-| Nguyễn Văn Duy | 100% phần đang có trên nhánh `main` | Sẽ được ghi bằng commit tích hợp Day10 |
-| Dương Thị Ngân | Có bằng chứng trên nhánh `ngan/quality-check` | Chạy handoff, phân tích lỗi, thêm test biên và hoàn thiện báo cáo cá nhân; chờ review/merge PR |
+| Nguyễn Văn Duy | Có bằng chứng trên `main` | Commit tích hợp Day10 `7bcc8ca` |
+| Dương Thị Ngân | Có bằng chứng trên `main` | Commit cá nhân `80ca173`; PR #1 đã merge bằng `aa94a56` |
 
-Trạng thái trên phản ánh bằng chứng hiện có trong Git history. PR của Ngân cần được review và merge vào `main` để xuất hiện trong lịch sử nhánh chính.
+Trạng thái trên phản ánh bằng chứng hiện có trong Git history sau khi PR #1 của Ngân được review và merge vào `main`.
 
 ## Lệnh nghiệm thu chung
 

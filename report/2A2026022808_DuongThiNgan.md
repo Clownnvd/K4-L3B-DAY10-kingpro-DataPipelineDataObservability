@@ -28,7 +28,7 @@ Tôi không nhận ownership cho phần cài đặt pipeline chính do Nguyễn 
 
 - Python 3.11.9 trên Windows 10 Home 64-bit.
 - Kết quả ba trạng thái: `baseline=True`, `corrupted=False`, `repaired=True`.
-- Bộ corrupted có 21 dòng; 4 dòng vi phạm tính duy nhất của `paper_id` tại chỉ số 0, 1, 19, 20.
+- Bộ corrupted có 21 dòng; 4 dòng có `paper_id` bị trùng tại chỉ số 0, 1, 19, 20.
 - Sáu dòng corrupted có `summary` rỗng tại chỉ số 0, 1, 2, 3, 19, 20.
 - Freshness của corrupted vẫn đạt: 4/21 dòng cũ, tương đương 19,05%, chưa vượt 25%.
 - Test cá nhân xác nhận ranh giới `min_value=5`: 5 dòng hợp lệ đạt, 4 dòng không đạt.
@@ -42,7 +42,7 @@ Pipeline RAG không nên index dữ liệu chỉ vì file đọc được. Dữ 
 
 ### Cách kiểm tra
 
-`run_data_quality_checks` tạo bản sao DataFrame, chuẩn hóa các chuỗi bắt buộc bằng `strip()` và đổi chuỗi rỗng thành `None`. Great Expectations kiểm tra số dòng, not-null, DOI duy nhất và độ dài summary. `evaluate_freshness_sla` xác thực `age_days`, đếm bài trên 180 ngày và chỉ đạt khi tỷ lệ không vượt 25%.
+`run_data_quality_checks` tạo bản sao DataFrame, chuẩn hóa các chuỗi bắt buộc bằng `strip()` và đổi chuỗi rỗng thành `None`. Great Expectations kiểm tra số dòng, not-null, DOI không trùng và độ dài summary. `evaluate_freshness_sla` xác thực `age_days`, đếm bài trên 180 ngày và chỉ đạt khi tỷ lệ không vượt 25%.
 
 | Thành phần | Nội dung |
 |---|---|

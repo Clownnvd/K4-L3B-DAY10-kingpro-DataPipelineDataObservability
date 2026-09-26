@@ -1,6 +1,6 @@
 # Day 10 task checklist
 
-Current execution scope: the verified group repository is published. Dương Thị Ngân has accepted write access and is completing the independent quality-check handoff on branch `ngan/quality-check`; review/merge and each member's VLearn receipt remain separate evidence.
+Current execution scope: the verified group repository is published. Dương Thị Ngân completed the independent quality-check handoff; PR #1 was reviewed and merged. Each member's VLearn receipt remains separate evidence.
 
 ## Progress
 
