@@ -1,6 +1,6 @@
 # Day 10 task checklist
 
-Current execution scope: publish the verified group repository and submit Nguyễn Văn Duy's VLearn link. The earlier LOCAL ONLY restriction was explicitly replaced by the user's publication/submission request. Keep Dương Thị Ngân's contribution pending until she runs the handoff and commits her own evidence.
+Current execution scope: the verified group repository is published. Dương Thị Ngân has accepted write access and is completing the independent quality-check handoff on branch `ngan/quality-check`; review/merge and each member's VLearn receipt remain separate evidence.
 
 ## Progress
 
@@ -22,7 +22,7 @@ Current execution scope: publish the verified group repository and submit Nguy�
 - [x] 6. Repair from the preserved snapshot and compare baseline/corrupted/repaired results.
 - [x] 7. Complete the technical report and prepare an independently runnable quality-check package for Ngân.
   - Team: Nguyễn Văn Duy and Dương Thị Ngân.
-  - Duy's verified work is recorded; Ngân remains pending her own run and commit.
+  - Duy's verified work is recorded; Ngân has run the handoff, added a boundary test and prepared her individual report on her own branch.
 
 ## Environment and handoff status
 
@@ -103,11 +103,11 @@ Full pipeline validation subsequently passed; see the completion receipt below.
 - `.venv/Scripts/python.exe script/export_local_report.py`: exit 0.
 - Baseline/corrupted/repaired: 24/21/24 rows; hit rate 1.0/0.7/1.0; token F1 1.0/0.6125/1.0; gates true/false/true.
 - `data/results/repair_verification.json`: all five boolean integrity checks true.
-- Handoff: `handoff/ngan-quality-check` with 22 standalone tests, exact quality module copy and all three real JSON datasets. Package copy in Downloads: `Day10-Ngan-Quality-Check.zip`.
+- Handoff: `handoff/ngan-quality-check` now has 23 standalone tests after Ngân added the minimum-row boundary case; the exact quality module copy and all three real JSON datasets remain unchanged.
 - Generated reports accurately label extractive answers, exact-title assistance, heuristic judging and absent source categories.
 - README includes uv/pip environment instructions and the exact two phase commands.
 - No GitHub publication, collaborator invites, external messages or VLearn submission were performed.
 
-Human follow-up outside the completed local preparation: Ng?n runs the package on her own machine and records actual results; participants confirm their own IDs and contribution reports; classroom demonstration and later submission remain human/course activities. Prepared files do not prove those activities occurred.
+Ngân's branch records the handoff run, new test and individual report. GitHub review/merge, classroom demonstration and each VLearn submission remain separately auditable activities; generated reports alone do not prove those external actions.
 
 ZIP independently extracted and verified: portable imports, run_checks exit0, 22 tests passed; no environment/secrets/generated reports packaged.
