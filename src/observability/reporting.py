@@ -1,35 +1,53 @@
 from __future__ import annotations
 
-from typing import Any
+import json
+from core.utils import write_text
+
+METRICS = ("retrieval_hit_rate", "mean_token_f1", "judge_accuracy", "mean_judge_score")
 
 
-def generate_phase1_report(
-    report_path,
-    source_summary: dict[str, Any],
-    metrics: dict[str, Any],
-    quality: dict[str, Any],
-    freshness: dict[str, Any],
-) -> None:
-    """TODO(student): viet markdown report cho baseline phase.
+def generate_phase1_report(report_path, source_summary, metrics, quality, freshness):
+    lines = ["# Baseline run", "", "Generated from this run's artifacts.", "",
+             "## Source and provenance", "", "```json", json.dumps(source_summary, indent=2), "```", "",
+             "## Measured results", "", "| Metric | Value |", "|---|---:|"]
+    lines += [f"| {key} | {metrics[key]:.6f} |" for key in METRICS]
+    lines += ["", f"Quality gate: **{quality['success']}**; GX suite: **{quality['gx_success']}**.",
+              f"Freshness: **{freshness['is_fresh']}**; stale {freshness['stale_rows']}/{freshness['total_rows']}.",
+              "", "## Interpretation and limits", "",
+              "Retrieval hit rate = questions with at least one correct DOI retrieved / all questions.",
+              "Token F1 compares whitespace-separated, case-folded token counts; repeated words count.",
+              "QA evaluation extracts retrieved metadata. Exact-title lookup assists semantic search.",
+              "The default judge uses token overlap, not independent LLM reasoning.",
+              "These title-addressed questions do not establish general open-ended reasoning quality.",
+              "All 24 source records lack subject categories; category questions test explicit missing-data responses.",
+              "No category labels were fabricated.", "",
+              f"Answer mode: `{metrics['answer_mode']}`. Judge mode: `{metrics['judge_mode']}`.",
+              f"Optional Ragas: `{metrics.get('ragas')}`."]
+    write_text(report_path, "\n".join(lines) + "\n")
 
-    Pseudo-code:
-    1. Gom source summary.
-    2. In metrics retrieval/evaluation.
-    3. In data quality va freshness.
-    4. Ghi markdown vao report_path.
-    """
-    raise NotImplementedError("Student task: implement phase 1 report.")
 
-
-def generate_corruption_report(
-    report_path,
-    baseline_metrics: dict[str, Any],
-    corrupted_metrics: dict[str, Any],
-    repaired_metrics: dict[str, Any],
-    corrupted_quality: dict[str, Any],
-    repaired_quality: dict[str, Any],
-    corrupted_freshness: dict[str, Any],
-    repaired_freshness: dict[str, Any],
-) -> None:
-    """TODO(student): viet markdown report so sanh baseline/corrupted/repaired."""
-    raise NotImplementedError("Student task: implement corruption comparison report.")
+def generate_corruption_report(report_path, baseline_metrics, corrupted_metrics, repaired_metrics,
+                               corrupted_quality, repaired_quality, corrupted_freshness, repaired_freshness):
+    lines = ["# Corruption and recovery experiment", "", "One frozen test set and source snapshot.", "",
+             "| Metric | Baseline | Corrupted | Repaired |", "|---|---:|---:|---:|"]
+    for key in METRICS:
+        lines.append(f"| {key} | {baseline_metrics[key]:.6f} | {corrupted_metrics[key]:.6f} | {repaired_metrics[key]:.6f} |")
+    lines += ["", f"Corrupted gate: **{corrupted_quality['success']}**; repaired gate: **{repaired_quality['success']}**.",
+              f"Corrupted freshness: **{corrupted_freshness['is_fresh']}** ({corrupted_freshness['stale_rows']}/{corrupted_freshness['total_rows']} stale).",
+              f"Repaired freshness: **{repaired_freshness['is_fresh']}** ({repaired_freshness['stale_rows']}/{repaired_freshness['total_rows']} stale).", "",
+              "## Observed impact", ""]
+    for key in ("retrieval_hit_rate", "mean_token_f1"):
+        delta = corrupted_metrics[key] - baseline_metrics[key]
+        residual = repaired_metrics[key] - baseline_metrics[key]
+        lines.append(f"- {key}: corruption delta {delta:+.6f}; repaired minus baseline {residual:+.6f}.")
+    lines += ["", "## Mechanism and limits", "",
+              "Dropped documents remove evidence; blank/noisy summaries harm answers even when the correct DOI is retrieved.",
+              "Truncated titles lose exact matches. Shifted dates change answers and freshness. Duplicates violate uniqueness.",
+              "Operations use chronological groups independently of evaluation answers; unaffected controls remain.",
+              "Only the isolated corrupted collection bypasses the failed gate, deliberately, to measure damage.",
+              "Baseline indexing requires a passing gate. Failed experimental validation triggers reconstruction from raw data.",
+              "Repair uses the baseline date and frozen questions, without a fresh API download.",
+              "Freshness alone is insufficient: up to 25% stale rows can pass while other checks fail.",
+              "Answers and judge use deterministic extraction and token overlap by default, not LLM evaluation.",
+              "Effects depend on the dataset. Metrics were generated by execution, never hand-edited."]
+    write_text(report_path, "\n".join(lines) + "\n")

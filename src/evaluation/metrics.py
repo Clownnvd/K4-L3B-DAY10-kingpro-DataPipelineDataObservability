@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from collections import Counter
 from statistics import mean
 import os
 import sys
 import types
 from typing import Any
 
-from datasets import Dataset
 from pydantic import BaseModel, Field
 
 from core.config import Settings
@@ -35,13 +35,11 @@ def _token_f1(reference: str, prediction: str) -> float:
     pred_tokens = normalize_whitespace(prediction).lower().split()
     if not ref_tokens or not pred_tokens:
         return 0.0
-    ref_set = set(ref_tokens)
-    pred_set = set(pred_tokens)
-    overlap = len(ref_set & pred_set)
+    overlap = sum((Counter(ref_tokens) & Counter(pred_tokens)).values())
     if overlap == 0:
         return 0.0
-    precision = overlap / len(pred_set)
-    recall = overlap / len(ref_set)
+    precision = overlap / len(pred_tokens)
+    recall = overlap / len(ref_tokens)
     return 2 * precision * recall / (precision + recall)
 
 
@@ -59,6 +57,8 @@ Return:
 - short reasoning
 """.strip()
     try:
+        if os.getenv("RUN_LLM_JUDGE", "").lower() not in {"1", "true", "yes"}:
+            raise RuntimeError("LLM judge disabled; using explicit token-overlap heuristic")
         llm = build_llm(settings=settings, temperature=0.0).with_structured_output(JudgeVerdict)
         return llm.invoke(prompt)
     except Exception:
@@ -66,7 +66,7 @@ Return:
         return JudgeVerdict(
             score=score,
             correct=score >= 3,
-            reasoning="Fallback heuristic judge used because the LLM evaluator was unavailable.",
+            reasoning="Token-overlap heuristic, not an LLM judge (disabled or unavailable).",
         )
 
 
@@ -74,6 +74,7 @@ def _run_ragas(settings: Settings, answers: list[dict[str, Any]]) -> dict[str, A
     if os.getenv("RUN_RAGAS", "").lower() not in {"1", "true", "yes"}:
         return {"skipped": "Set RUN_RAGAS=1 to enable the slower Ragas pass."}
     try:
+        from datasets import Dataset
         if "langchain_community.chat_models.vertexai" not in sys.modules:
             shim = types.ModuleType("langchain_community.chat_models.vertexai")
             shim.ChatVertexAI = type("ChatVertexAI", (), {})
@@ -108,6 +109,8 @@ def evaluate_pipeline(
     answers_output_path,
 ) -> EvaluationBundle:
     test_set = read_json(test_set_path)
+    if not test_set:
+        raise ValueError("Evaluation set must not be empty")
     answers: list[dict[str, Any]] = []
 
     for item in test_set:
@@ -131,6 +134,9 @@ def evaluate_pipeline(
         )
 
     summary = {
+        "answer_mode": "extractive_metadata",
+        "retrieval_mode": "exact_title_assisted_semantic_search",
+        "judge_mode": "token_overlap_heuristic" if all("heuristic" in item["judge"]["reasoning"].lower() for item in answers) else "llm_or_mixed",
         "samples": len(answers),
         "retrieval_hit_rate": mean(1.0 if item["retrieval_hit"] else 0.0 for item in answers),
         "mean_token_f1": mean(item["token_f1"] for item in answers),

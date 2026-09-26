@@ -1,0 +1,9 @@
+{
+  "raw_unchanged": true,
+  "raw_response_unchanged": true,
+  "test_set_unchanged": true,
+  "repair_identical_to_baseline": true,
+  "repair_idempotent": true,
+  "auto_repair_trigger": "failed_quality_gate",
+  "quality_after_repair": true
+}

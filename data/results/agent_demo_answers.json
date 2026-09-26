@@ -1,0 +1,7 @@
+[
+  {
+    "question": "What does the source abstract say about the paper \"DOLPHIN: A Privacy-Preserving Digital Investigation Readiness Assessment Framework based on Offline Large Language Models and Retrieval-Augmented Generation\"?",
+    "answer": "Abstract Increasingly, digital forensic investigations require a quick, reliable, and privacy-preserving assessment of case materials before formal forensic examination.",
+    "provider": "mock"
+  }
+]

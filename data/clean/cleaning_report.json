@@ -1,0 +1,13 @@
+{
+  "run_date_utc": "2026-09-26",
+  "input_rows": 24,
+  "output_rows": 24,
+  "invalid_rows_removed": 0,
+  "duplicate_rows_removed": 0,
+  "rejected_rows": [],
+  "duplicate_rows": [],
+  "missing_categories": 24,
+  "missing_authors": 0,
+  "summaries_under_30_chars": 0,
+  "future_publication_dates": 0
+}

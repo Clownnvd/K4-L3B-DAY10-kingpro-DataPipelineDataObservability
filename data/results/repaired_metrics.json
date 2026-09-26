@@ -1,0 +1,13 @@
+{
+  "answer_mode": "extractive_metadata",
+  "retrieval_mode": "exact_title_assisted_semantic_search",
+  "judge_mode": "token_overlap_heuristic",
+  "samples": 10,
+  "retrieval_hit_rate": 1.0,
+  "mean_token_f1": 1.0,
+  "judge_accuracy": 1.0,
+  "mean_judge_score": 5,
+  "ragas": {
+    "skipped": "Set RUN_RAGAS=1 to enable the slower Ragas pass."
+  }
+}

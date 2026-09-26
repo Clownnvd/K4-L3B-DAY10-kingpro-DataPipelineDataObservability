@@ -5,12 +5,25 @@ from typing import Any
 from langchain.agents import create_agent
 from langchain.tools import tool
 
-from core.config import Settings
+from core.config import Settings, normalized_provider
 from retrieval.index import LocalEmbeddingIndex
 from retrieval.llm import build_llm
 
 
 def build_agent(settings: Settings, index: LocalEmbeddingIndex):
+    if normalized_provider(settings) == "mock":
+        from langchain_core.messages import AIMessage
+        from retrieval.qa import answer_question
+
+        class LocalCorpusAgent:
+            def invoke(self, payload):
+                message = payload["messages"][-1]
+                question = message["content"] if isinstance(message, dict) else message.content
+                answer = answer_question(question, settings, index)
+                return {"messages": [AIMessage(content=answer.answer)]}
+
+        return LocalCorpusAgent()
+
     @tool
     def semantic_search_papers(query: str, top_k: int = 4) -> str:
         """Search the local paper corpus with embeddings and return the most relevant papers."""
